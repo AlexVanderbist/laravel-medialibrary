@@ -2,7 +2,6 @@
 
 [![Latest Version](https://img.shields.io/github/release/spatie/laravel-medialibrary.svg?style=flat-square)](https://github.com/spatie/laravel-medialibrary/releases)
 [![Build Status](https://img.shields.io/travis/spatie/laravel-medialibrary/master.svg?style=flat-square)](https://travis-ci.org/spatie/laravel-medialibrary)
-[![SensioLabsInsight](https://img.shields.io/sensiolabs/i/27cf455a-0555-4bcf-abae-16b5f7860d09.svg?style=flat-square)](https://insight.sensiolabs.com/projects/27cf455a-0555-4bcf-abae-16b5f7860d09)
 [![Quality Score](https://img.shields.io/scrutinizer/g/spatie/laravel-medialibrary.svg?style=flat-square)](https://scrutinizer-ci.com/g/spatie/laravel-medialibrary)
 [![StyleCI](https://styleci.io/repos/33916850/shield)](https://styleci.io/repos/33916850)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-medialibrary.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-medialibrary)
@@ -13,18 +12,18 @@ simple API to work with. To learn all about it, head over to [the extensive docu
 Here are a few short examples of what you can do:
 ```php
 $newsItem = News::find(1);
-$newsItem->addMedia($pathToFile)->toCollection('images');
+$newsItem->addMedia($pathToFile)->toMediaCollection('images');
 ```
 It can handle your uploads directly:
 ```php
-$newsItem->addMedia($request->file('image'))->toCollection('images');
+$newsItem->addMedia($request->file('image'))->toMediaCollection('images');
 ```
 Want to store some large files on another filesystem? No problem:
 ```php
-$newsItem->addMedia($smallFile)->toCollectionOnDisk('downloads', 'local');
-$newsItem->addMedia($bigFile)->toCollectionOnDisk('downloads', 's3');
+$newsItem->addMedia($smallFile)->toMediaCollection('downloads', 'local');
+$newsItem->addMedia($bigFile)->toMediaCollection('downloads', 's3');
 ```
-The storage of the files is handled by [Laravel's Filesystem](http://laravel.com/docs/5.1/filesystem),
+The storage of the files is handled by [Laravel's Filesystem](https://laravel.com/docs/5.4/filesystem),
 so you can use any filesystem you like. Additionally the package can create image manipulations
 on images and pdfs that have been added in the medialibrary.
 
@@ -142,6 +141,12 @@ return [
             'CacheControl' => 'max-age=604800',
         ],
     ],
+    
+    /*
+     * The path where to store temporary files while performing image conversions.
+     * If set to null, storage_path('medialibrary/temp') will be used.
+     */
+    'temporary_directory_path' => null,
 
     /*
      * FFMPEG & FFProbe binaries path, only used if you try to generate video
@@ -212,7 +217,7 @@ public function register()
 Manually copy the package config file to `app\config\laravel-medialibrary.php` (you may need to
 create the config directory if it does not already exist).
 
-Copy the [Laravel filesystem config file](https://github.com/laravel/laravel/blob/v5.2.31/config/filesystems.php) into `app\config\filesystem.php`. You should add a disk configuration to the filesystem config matching the `defaultFilesystem` specified in the laravel-medialibrary config file.
+Copy the [Laravel filesystem config file](https://github.com/laravel/laravel/blob/v5.4.15/config/filesystems.php) into `app\config\filesystem.php`. You should add a disk configuration to the filesystem config matching the `defaultFilesystem` specified in the laravel-medialibrary config file.
 
 Finally, update `boostrap/app.php` to load both config files:
 

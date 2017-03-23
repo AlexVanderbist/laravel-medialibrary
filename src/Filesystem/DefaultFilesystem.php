@@ -37,23 +37,28 @@ class DefaultFilesystem implements Filesystem
     /*
      * Copy a file to the medialibrary for the given $media.
      */
-    public function copyToMediaLibrary(string $file, Media $media, bool $conversions = false, string $targetFileName = '')
+    public function copyToMediaLibrary(string $pathToFile, Media $media, bool $conversions = false, string $targetFileName = '')
     {
         $destination = $this->getMediaDirectory($media, $conversions).
-            ($targetFileName == '' ? pathinfo($file, PATHINFO_BASENAME) : $targetFileName);
+            ($targetFileName == '' ? pathinfo($pathToFile, PATHINFO_BASENAME) : $targetFileName);
+
+        $file = fopen($pathToFile, 'r');
 
         if ($media->getDiskDriverName() === 'local') {
             $this->filesystem
                 ->disk($media->disk)
-                ->put($destination, fopen($file, 'r'));
+                ->put($destination, $file);
+
+            fclose($file);
 
             return;
         }
 
         $this->filesystem
             ->disk($media->disk)
-            ->getDriver()
-            ->put($destination, fopen($file, 'r'), $this->getRemoteHeadersForFile($file));
+            ->put($destination, $file, $this->getRemoteHeadersForFile($pathToFile));
+
+        fclose($file);
     }
 
     /**

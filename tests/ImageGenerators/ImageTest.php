@@ -12,7 +12,7 @@ class ImageTest extends TestCase
     {
         $imageGenerator = new Image();
 
-        $media = $this->testModelWithoutMediaConversions->addMedia($this->getTestJpg())->toMediaLibrary();
+        $media = $this->testModelWithoutMediaConversions->addMedia($this->getTestJpg())->toMediaCollection();
 
         $this->assertTrue($imageGenerator->canConvert($media));
 

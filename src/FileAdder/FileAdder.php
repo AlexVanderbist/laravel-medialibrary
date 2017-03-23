@@ -233,7 +233,7 @@ class FileAdder
      */
     public function toMediaLibraryOnCloudDisk(string $collectionName = 'default')
     {
-        return $this->toMediaLibrary($collectionName, config('filesystems.cloud'));
+        return $this->toMediaCollection($collectionName, config('filesystems.cloud'));
     }
 
     /**
@@ -245,7 +245,7 @@ class FileAdder
      * @throws FileCannotBeAdded
      * @throws \Spatie\MediaLibrary\Exceptions\FileCannotBeAdded
      */
-    public function toMediaLibrary(string $collectionName = 'default', string $diskName = '')
+    public function toMediaCollection(string $collectionName = 'default', string $diskName = '')
     {
         if (! $this->subject->exists) {
             throw ModelDoesNotExist::create($this->subject);
@@ -284,6 +284,22 @@ class FileAdder
         }
 
         return $media;
+    }
+
+    /**
+     * @deprecated Please use `toMediaCollection` instead
+     *
+     * @param string $collectionName
+     * @param string $diskName
+     *
+     * @return \Spatie\MediaLibrary\Media
+     *
+     * @throws FileCannotBeAdded
+     * @throws \Spatie\MediaLibrary\Exceptions\FileCannotBeAdded
+     */
+    public function toMediaLibrary(string $collectionName = 'default', string $diskName = '')
+    {
+        return $this->toMediaCollection($collectionName, $diskName);
     }
 
     /**
